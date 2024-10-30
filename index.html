@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            /* Color de fondo del cuerpo */
+        }
+
+        #chat-container {
+            background-color: #fff;
+            /* Color de fondo del chat */
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 400px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            /* Sombra del chat */
+        }
+
+        .mensaje-usuario {
+            text-align: right;
+            background-color: #007BFF;
+            /* Color de fondo del mensaje del usuario */
+            color: #fff;
+            /* Color del texto del mensaje del usuario */
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        .mensaje-chatbot {
+            text-align: left;
+            background-color: #ffffff;
+            font-family: Arial, sans-serif;
+            white-space: pre-wrap;
+            /* Mantiene el formato pre y permite el ajuste de línea */
+            word-wrap: break-word;
+            /* Rompe palabras largas */
+            /* Color de fondo del mensaje del chatbot */
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Estilo para el cuadro de texto y el botón */
+        #mensaje {
+            width: 70%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+            background-color: #ececec;
+
+        }
+
+        #enviar-btn {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #respuesta {
+            margin-top: 20px;
+            width: 300px;
+            /* Ancho máximo del contenedor */
+            overflow: auto;
+            /* Agrega barras de desplazamiento si es necesario */
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <h1 style="text-align: center;">Chatbot</h1>
+
+    <!-- Contenedor del chat -->
+    <div id="chat-container">
+        <!-- Mensajes del chat -->
+        <div class="mensaje-chatbot">Hola, ¿en qué puedo ayudarte?</div>
+
+        <!-- Entrada de mensaje -->
+        <div style="display: flex;">
+            <input type="text" id="mensaje" onkeyup="if(event.keyCode == 13) enviarMensaje()"
+                placeholder="Ingrese su mensaje">
+            <button id="enviar-btn" onclick="enviarMensaje()">Enviar</button>
+        </div>
+        <p style="color: rgb(198, 202, 206);">Respuesta del chatbot</p>
+        <!-- Respuesta del chatbot -->
+        <div>
+            <div id="respuesta" style="text-align: center;"></div>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        // user_id = Math.floor(Math.random() * 100000) + 1;
+        user_id = 'alfredo@rocket.la';
+        flag = 'start'
+        function enviarMensaje() {
+            // Obtener el mensaje del cuadro de texto
+            var mensaje = document.getElementById("mensaje").value;
+
+            // Mostrar el mensaje del usuario en el chat
+            var chatContainer = document.getElementById("chat-container");
+            var mensajeUsuario = '<div class="mensaje-usuario">' + mensaje + '</div>';
+            chatContainer.innerHTML += mensajeUsuario;
+
+
+            // Crear un objeto de solicitud
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://3.95.100.199:8000/api/v1/channel/chatbot/ai", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            let payload = {
+                "flag": flag,
+                "to": user_id,
+                "type": "text",
+                "text": {
+                    "body": mensaje
+                }
+            }
+
+            // Definir el cuerpo de la solicitud
+            var cuerpoSolicitud = JSON.stringify(payload);
+
+            // Configurar la función de manejo de la respuesta
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Mostrar la respuesta del chatbot en el chat
+                    var response = JSON.parse(xhr.responseText)
+                    console.log(response);
+                    response = response.text.body
+                    var respuestaChatbot = '<pre class="mensaje-chatbot">' + response + '</pre>';
+                    chatContainer.innerHTML += respuestaChatbot;
+                    flag = 'bot'
+                }
+            };
+
+            // Enviar la solicitud con el mensaje
+            xhr.send(cuerpoSolicitud);
+
+            // Borrar el mensaje del cuadro de texto
+            document.getElementById("mensaje").value = '';
+        }
+    </script>
+</body>
+
+</html>
