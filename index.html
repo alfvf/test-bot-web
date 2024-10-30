@@ -68,8 +68,8 @@
 
     <div id="chat-container">
         <!-- Campo de email -->
-        <input type="email" id="email" placeholder="Ingrese su email" required>
-        
+        <input type="email" id="email" placeholder="Ingrese su email">
+
         <div class="mensaje-chatbot">Hola, ¿en qué puedo ayudarte?</div>
 
         <div style="display: flex;">
@@ -117,11 +117,13 @@
                     const respuestaChatbot = '<pre class="mensaje-chatbot">' + response + '</pre>';
                     chatContainer.innerHTML += respuestaChatbot;
                     flag = 'bot';
+                    document.getElementById("email").value = email;
                 }
             };
 
             xhr.send(JSON.stringify(payload));
-            document.getElementById("mensaje").value = '';
+            document.getElementById("mensaje").value = ''; // Limpiar solo el campo de mensaje
+            document.getElementById("email").value = email;
         }
     </script>
 </body>
