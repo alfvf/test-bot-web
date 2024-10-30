@@ -138,7 +138,7 @@
                     // Mostrar la respuesta del chatbot en el chat
                     var response = JSON.parse(xhr.responseText)
                     console.log(response);
-                    response = response.text.body
+                    response = response.text;
                     var respuestaChatbot = '<pre class="mensaje-chatbot">' + response + '</pre>';
                     chatContainer.innerHTML += respuestaChatbot;
                     flag = 'bot'
