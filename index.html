@@ -100,7 +100,7 @@
             chatContainer.innerHTML += mensajeUsuario;
 
             const xhr = new XMLHttpRequest();
-            xhr.open("POST", "https://iriss.me/api/v1/channel/chatbot/ai", true);
+            xhr.open("POST", "https://micro.gama.rocket.la/api/v1/channel/chatbot/ai", true);
             xhr.setRequestHeader("Content-Type", "application/json");
             const payload = {
                 "flag": flag,
